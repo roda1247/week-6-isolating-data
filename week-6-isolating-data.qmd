@@ -33,7 +33,7 @@ babynames <- read_csv("babynames_500.csv")
 Alter the code to select just the `n` column:
 
 ```{r}
-select(babynames, name, prop)
+select(babynames, n)
 ```
 
 ## Quiz
@@ -44,7 +44,7 @@ Which of these is NOT a way to select the `name` and `n` columns together?
 select(babynames, -c(year, sex, prop))
 select(babynames, name:n)
 select(babynames, starts_with("n"))
-select(babynames, ends_with("n"))
+select(babynames, ends_with("n")) # <- This code is not a way to select
 ```
 
 ## Your Turn 2
@@ -55,7 +55,8 @@ Use `filter`, `babynames`, and the logical operators to find:
 * All the years the name "Judith" appeared in the top 500 names.    
 
 ```{r}
-
+filter(babynames, prop >= 0.8)
+filter(babynames, name == "Judith")
 ```
 
 ## Your Turn 3
@@ -67,7 +68,9 @@ Use Boolean operators to return only the rows that contain:
 * Names that are one of Acura, Lexus, or Yugo
 
 ```{r}
-
+filter(babynames, name == "Sue", sex == "M")
+filter(babynames, n == 15 | n == 16, year == 1880)
+filter(babynames, name %in% c("Acura", "Lexus", "Yugo"))
 ```
 
 ## Help Me
@@ -76,7 +79,8 @@ What is the smallest value of n?
 What is the largest?
 
 ```{r}
-
+arrange(babynames, n)
+arrange(babynames, desc(n))
 ```
 
 ## Your Turn 4
@@ -88,7 +92,9 @@ Use `%>%` or `|>` to write a sequence of functions that:
 3. Arranges the results so that the most popular names are near the top.
 
 ```{r}
-
+female_2023 <- filter(babynames, year == 2023, sex == "F") |> 
+  select(name, n) |> 
+  arrange(desc(n))
 
 ```
 
@@ -101,9 +107,17 @@ Use `%>%` or `|>` to write a sequence of functions that:
 5. Save your graph as "yourname.png" to submit for your preview work.  
 
 ```{r}
+babynames |> 
+  filter(name =="Bianca", sex =="F") |> 
+  select (year, prop) |> 
+  ggplot()+
+  geom_line(mapping = aes(x=year, y=prop), size=1)+
+  labs(x = "Year", 
+       y = "Proportion of US Births that Year",
+       title = "Popularity of \"Bianca\" in the US Since 1880") +
+  theme_light()
 
-
-
+ggsave(filename = "Bianca_Rodas_W6Video.png")
 ```
 
 
